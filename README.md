@@ -1,6 +1,9 @@
 # steam_workshop_discord
 
-A python program that polls the Steam workshop for new mods and posts them to a Discord channel using a webhook.
+A python program that polls the Steam workshop of specified games for new mods and posts them to a Discord channel using a webhook.
+
+![grafik](https://user-images.githubusercontent.com/14299449/77251258-ada86f80-6c4d-11ea-9fcf-7ec6f134b17c.png)
+
 
 ## Setup
 
@@ -14,7 +17,7 @@ A python program that polls the Steam workshop for new mods and posts them to a 
 
 ## Inner workings
 
-The mod maintains a list of all the mods it has posted to each channel.
+The script maintains a list of all the mods it has posted to each channel.
 Whenever it is run, it determines the workshop pages it needs to fetch, requests the ten latest mods from each page.
 For each channel, if the channel has no recorded mods, those mods are listed as recorded. Otherwise, the new mods are filtered, and author+mod information
 is requested. Using mod and author information, a message is assembled, which is then posted to each channel that needs it.
