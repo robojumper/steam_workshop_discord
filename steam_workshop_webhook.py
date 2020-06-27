@@ -89,7 +89,7 @@ def post_mod(m, u):
     e["url"] = "http://steamcommunity.com/sharedfiles/filedetails/?id=%i" % (int(m["publishedfileid"]))
     e["description"] = re.sub("[\(\[].*?[\)\]]", '' , m["description"][:200].replace("\r\n", " ")) + '\\u2026'.decode('unicode-escape')
     e["color"] = 3447003
-    e["timestamp"] = datetime.datetime.fromtimestamp(m["time_created"]).isoformat()
+    e["timestamp"] = datetime.datetime.utcfromtimestamp(m["time_created"]).isoformat()
 
     e["author"] = {}
     e["author"]["name"] = u["personaname"]
