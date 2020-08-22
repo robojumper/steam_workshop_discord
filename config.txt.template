@@ -1,7 +1,0 @@
-{
-    "webhooks" : {
-        "https://discordapp.com/api/webhooks/000000000000000000/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx": [268500],
-        "https://discordapp.com/api/webhooks/000000000000000000/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx": [268500, 646570]
-    },
-    "webkey"  : "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-}

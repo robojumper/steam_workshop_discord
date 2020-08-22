@@ -1,0 +1,12 @@
+[config]
+webkey = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+[[hook]]
+# XCOM 2 on Server 1
+url = "https://discordapp.com/api/webhooks/000000000000000000/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+ids = [268500]
+
+[[hook]]
+# XCOM 2 + Slay the Spire on Server 2
+url = "https://discordapp.com/api/webhooks/000000000000000000/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+ids = [268500, 646570]

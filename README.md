@@ -4,6 +4,10 @@ A python program that polls the Steam workshop of specified games for new mods a
 
 ![grafik](https://user-images.githubusercontent.com/14299449/77251258-ada86f80-6c4d-11ea-9fcf-7ec6f134b17c.png)
 
+## Dependencies
+
+* Python 3.5+
+* `toml` (`python3 -m pip install toml`)
 
 ## Setup
 
@@ -11,7 +15,7 @@ A python program that polls the Steam workshop of specified games for new mods a
 
 2. Determine the Steam ID of the games whose workshop pages you are interested in.
 
-3. Create a copy of `config.txt.template` named `config.txt`, open it with a text editor, fill out the information.
+3. Create a copy of `config.toml.template` named `config.toml`, open it with a text editor, fill out the information.
 
 4. Create a cron job (or find a dfferent scheduler) that regularly runs the script.
 
@@ -22,6 +26,13 @@ Whenever it is run, it determines the workshop pages it needs to fetch, requests
 For each channel, if the channel has no recorded mods, those mods are listed as recorded. Otherwise, the new mods are filtered, and author+mod information
 is requested. Using mod and author information, a message is assembled, which is then posted to each channel that needs it.
 Only upon a successful (HTTP 204) request, the mod is recorded as posted.
+
+## Compatibility policy
+
+New versions of this script may break compatibility with previous deployments. For updates to running deployments,
+the author recommends configuring the new deployment without a `known_mods` file, running the old version one final time,
+then running the new deployment once immediately. As of the current version, the script will never post mods to a channel if the
+channel hasn't been recorded in `known_mods`, so there will be no duplicate posts.
 
 
 ## License

@@ -1,1 +1,4 @@
-config.txt
+config.toml
+known_mods
+*.log
+*.sh
