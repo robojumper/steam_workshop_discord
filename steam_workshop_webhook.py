@@ -25,6 +25,7 @@ GETPLAYERSUMM_URL = "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/
 POST_URL = "https://api.steampowered.com/ISteamRemoteStorage/GetPublishedFileDetails/v1/"
 BUILT_QUERY_URL = "%s&format=%s&query_type=%i&page=%i&numperpage=%i&creator_appid=%i&appid=%s&filetype=%i" % (
     QUERY_URL, "json", 1, 1, MAX_MODS, 0, "%i", 0)
+APPDETAILS_URL = "https://store.steampowered.com/api/appdetails?key=%s&appids=%s" % (WEBKEY, "%i")
 
 
 def keyhash(string):
@@ -71,11 +72,29 @@ def determine_mods_to_request(handled_mods):
 
     return list(new_mods)
 
+def get_game_name(handled_mods, app_id):
+    if str(app_id) not in handled_mods:
+        handled_mods[str(app_id)] = dict()
+
+    if "game_name" in handled_mods[str(app_id)]:
+        return handled_mods[str(app_id)]["game_name"]
+    else:
+        req = requests.get(APPDETAILS_URL % (app_id))
+        if req.status_code == 200:
+            name = json.loads(req.text)[str(app_id)]["data"]["name"]
+            handled_mods[str(app_id)]["game_name"] = name
+            return name
+
+    return None
+
 
 def post_mod(handled_mods, mod, user):
     """Post the mod and add it to handled_mods if successful"""
+
     publishedfileid = int(mod["publishedfileid"])
     app_id = int(mod["consumer_app_id"])
+    game_name = get_game_name(handled_mods, app_id)
+
     embed = {}
     wk_obj = {'embeds': [{}]}
     embed["title"] = "%s" % (mod["title"])
@@ -84,7 +103,7 @@ def post_mod(handled_mods, mod, user):
         "url"] = "http://steamcommunity.com/sharedfiles/filedetails/?id=%i" % (
             publishedfileid)
     embed["description"] = re.sub(
-        r"[\(\[].*?[\)\]]", '', mod["description"][:200].replace(
+        r"\[.*?\]", '', mod["description"][:200].replace(
             "\r\n", " ")) + '\u2026'
     embed["color"] = 3447003
     embed["timestamp"] = datetime.datetime.utcfromtimestamp(
@@ -101,6 +120,10 @@ def post_mod(handled_mods, mod, user):
     embed["thumbnail"]["proxy_url"] = user["profileurl"]
     embed["thumbnail"]["height"] = 84
     embed["thumbnail"]["width"] = 84
+
+    if game_name is not None:
+        embed["footer"] = {}
+        embed["footer"]["text"] = "New %s mod release" % (game_name)
 
     wk_obj["embeds"][0] = embed
     headers = {'Content-type': 'application/json'}
@@ -185,9 +208,10 @@ def main():
 
     # Cleanup -- if we request the latest 10 mods, keep the latest 20 posted.
     # This gives some slack space in case users delete or unlist mods.
-    for dicts in known_mods.values():
-        for key in dicts.keys():
-            dicts[key] = sorted(dicts[key])[-(MAX_MODS * 2):]
+    for key, val in known_mods.items():
+        if len(key) == 40: # SHA-1 hash
+            for app_id in val.keys():
+                val[app_id] = sorted(val[app_id])[-(MAX_MODS * 2):]
 
     try:
         with open('known_mods', 'w+') as k_m_file:
