@@ -4,6 +4,7 @@ and posts them to Discord webhooks."""
 import datetime
 import hashlib
 import json
+import os
 import re
 import sys
 import requests
@@ -51,6 +52,9 @@ def determine_mods_to_request(handled_mods):
     """Finds the mods that need to be posted to at least one channel."""
     app_ids = set()
     new_mods = set()
+
+    if "SDWEBHOOK_MANUALLY_POST" in os.environ:
+        return [int(os.environ["SDWEBHOOK_MANUALLY_POST"])]
 
     for hook in HOOKS:
         for app_id in hook["ids"]:
@@ -102,9 +106,8 @@ def post_mod(handled_mods, mod, user):
     embed[
         "url"] = "http://steamcommunity.com/sharedfiles/filedetails/?id=%i" % (
             publishedfileid)
-    embed["description"] = re.sub(
-        r"\[.*?\]", '', mod["description"][:200].replace(
-            "\r\n", " ")) + '\u2026'
+    embed["description"] = re.sub(r"\[.*?\]", '', mod["description"].replace(
+        "\r\n", " "))[:200] + '\u2026'
     embed["color"] = 3447003
     embed["timestamp"] = datetime.datetime.utcfromtimestamp(
         mod["time_created"]).isoformat()
