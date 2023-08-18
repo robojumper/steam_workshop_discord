@@ -209,13 +209,6 @@ def main():
 
     post_new_mods(known_mods)
 
-    # Cleanup -- if we request the latest 10 mods, keep the latest 20 posted.
-    # This gives some slack space in case users delete or unlist mods.
-    for key, val in known_mods.items():
-        if len(key) == 40: # SHA-1 hash
-            for app_id in val.keys():
-                val[app_id] = sorted(val[app_id])[-(MAX_MODS * 2):]
-
     try:
         with open('known_mods', 'w+') as k_m_file:
             toml.dump(known_mods, k_m_file)
